@@ -1,0 +1,15 @@
+[Unit]
+Description=EduAlert Exam News Scraper & WhatsApp Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/edualert
+ExecStart=/var/www/edualert/venv/bin/python app.py
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

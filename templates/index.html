@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAlert • NTA, JEE, NEET & VITEEE WhatsApp News Bot</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="brand-icon">🎓</div>
+                <div class="brand-text">
+                    <h1>EduAlert <span>WhatsApp Bot</span></h1>
+                    <p>Real-time Exam News & Official Notices Delivery</p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button id="toggle-worker-btn" class="btn btn-outline">
+                    <span class="status-dot {{ 'active' if is_worker_running else 'inactive' }}" id="worker-dot"></span>
+                    <span id="worker-status-text">{{ 'Auto-Monitor: ON' if is_worker_running else 'Auto-Monitor: OFF' }}</span>
+                </button>
+                <button id="scan-now-btn" class="btn btn-primary">
+                    <span class="btn-icon">⚡</span>
+                    <span>Scan & Send News Now</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Overview Banner -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon bg-blue">📢</div>
+                <div class="stat-data">
+                    <span class="stat-val" id="stat-total">{{ stats.total_articles }}</span>
+                    <span class="stat-label">Total Notices Tracked</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-green">💬</div>
+                <div class="stat-data">
+                    <span class="stat-val" id="stat-sent">{{ stats.sent_alerts }}</span>
+                    <span class="stat-label">Sent to WhatsApp</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-amber">⏳</div>
+                <div class="stat-data">
+                    <span class="stat-val" id="stat-pending">{{ stats.pending_alerts }}</span>
+                    <span class="stat-label">Pending Dispatch</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-purple">🎯</div>
+                <div class="stat-data">
+                    <span class="stat-val" id="stat-active-exams">{{ config.monitored_exams|length }}</span>
+                    <span class="stat-label">Monitored Exams</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area with Navigation Tabs -->
+        <main class="main-content">
+            <div class="tabs-header">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="feed-tab">
+                        <span>📰 Live Exam Notices</span>
+                        <span class="tab-badge" id="feed-count-badge">{{ articles|length }}</span>
+                    </button>
+                    <button class="tab-btn" data-tab="settings-tab">
+                        <span>⚙️ WhatsApp Bot Settings</span>
+                    </button>
+                    <button class="tab-btn" data-tab="instructions-tab">
+                        <span>📱 WhatsApp Setup Guide (Free)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 1: Live Exam Notices -->
+            <div class="tab-pane active" id="feed-tab">
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-chips" id="exam-chips">
+                        <button class="chip active" data-filter="ALL">All Exams</button>
+                        <button class="chip" data-filter="NTA">🇮🇳 NTA Official</button>
+                        <button class="chip" data-filter="JEE">📐 JEE (Main/Adv)</button>
+                        <button class="chip" data-filter="NEET">🩺 NEET UG</button>
+                        <button class="chip" data-filter="VITEEE">🏛️ VITEEE</button>
+                        <button class="chip" data-filter="CUET">🎓 CUET</button>
+                        <button class="chip" data-filter="BITSAT">⚡ BITSAT</button>
+                    </div>
+                    <div class="feed-refresh">
+                        <button id="refresh-feed-btn" class="btn btn-sm btn-ghost">🔄 Refresh List</button>
+                    </div>
+                </div>
+
+                <!-- Articles Grid -->
+                <div class="articles-container" id="articles-list">
+                    {% if articles %}
+                        {% for art in articles %}
+                            <div class="article-card {{ 'card-high-priority' if art.priority == 'HIGH' else '' }}" data-exam="{{ art.exam_category }}">
+                                <div class="article-meta">
+                                    <span class="exam-pill exam-{{ art.exam_category|lower }}">{{ art.exam_category }}</span>
+                                    {% if art.priority == 'HIGH' %}
+                                        <span class="priority-badge badge-high">🚨 Urgent</span>
+                                    {% elif art.priority == 'MEDIUM' %}
+                                        <span class="priority-badge badge-medium">📢 Notice</span>
+                                    {% else %}
+                                        <span class="priority-badge badge-low">ℹ️ News</span>
+                                    {% endif %}
+                                    <span class="article-date">{{ art.published_date }}</span>
+                                </div>
+                                <h3 class="article-title">{{ art.title }}</h3>
+                                <div class="article-footer">
+                                    <span class="article-source">🏛️ {{ art.source }}</span>
+                                    <div class="article-actions">
+                                        <a href="{{ art.url }}" target="_blank" rel="noopener noreferrer" class="link-btn">
+                                            Open Notice ↗
+                                        </a>
+                                        {% if art.is_sent %}
+                                            <span class="status-tag sent">✓ Sent to WhatsApp</span>
+                                        {% else %}
+                                            <span class="status-tag pending">⏳ Pending</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>No Exam Notices Loaded Yet</h3>
+                            <p>Click "Scan & Send News Now" above to fetch official NTA, VITEEE, JEE & NEET updates immediately.</p>
+                            <button onclick="document.getElementById('scan-now-btn').click()" class="btn btn-primary btn-sm">Scan Now</button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Tab 2: WhatsApp Bot Settings -->
+            <div class="tab-pane" id="settings-tab">
+                <div class="settings-card">
+                    <div class="card-header">
+                        <h2>WhatsApp Delivery Configuration</h2>
+                        <p>Configure which WhatsApp service delivers your exam notices directly to your smartphone.</p>
+                    </div>
+
+                    <form id="settings-form" class="settings-form">
+                        <!-- Provider Selector -->
+                        <div class="form-group">
+                            <label for="whatsapp_provider">WhatsApp Provider</label>
+                            <select id="whatsapp_provider" name="whatsapp_provider" class="form-control">
+                                <option value="callmebot" {{ 'selected' if config.whatsapp_provider == 'callmebot' else '' }}>
+                                    CallMeBot (Recommended: 100% Free, Setup in 1 min, no credit card)
+                                </option>
+                                <option value="twilio" {{ 'selected' if config.whatsapp_provider == 'twilio' else '' }}>
+                                    Twilio WhatsApp API (Sandbox / Production)
+                                </option>
+                                <option value="meta" {{ 'selected' if config.whatsapp_provider == 'meta' else '' }}>
+                                    Meta WhatsApp Cloud API (Official Developer App)
+                                </option>
+                                <option value="console" {{ 'selected' if config.whatsapp_provider == 'console' else '' }}>
+                                    Console Dry-Run (Local testing without real WhatsApp messages)
+                                </option>
+                            </select>
+                            <span class="form-hint">CallMeBot is free and sends WhatsApp messages directly to your personal phone number.</span>
+                        </div>
+
+                        <!-- CallMeBot Section -->
+                        <div id="callmebot-config" class="provider-section">
+                            <div class="form-row">
+                                <div class="form-group col-half">
+                                    <label for="callmebot_phone">Your WhatsApp Phone Number (with Country Code)</label>
+                                    <input type="text" id="callmebot_phone" name="callmebot_phone" class="form-control" 
+                                           placeholder="+919876543210" value="{{ config.callmebot.phone }}">
+                                    <span class="form-hint">E.g., +919876543210 (Include country code '+91' for India)</span>
+                                </div>
+                                <div class="form-group col-half">
+                                    <label for="callmebot_apikey">CallMeBot API Key</label>
+                                    <input type="text" id="callmebot_apikey" name="callmebot_apikey" class="form-control" 
+                                           placeholder="Your CallMeBot API Key" value="{{ config.callmebot.apikey }}">
+                                    <span class="form-hint">Check "WhatsApp Setup Guide" tab for 30-second instructions to get this key free.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Twilio Section -->
+                        <div id="twilio-config" class="provider-section hidden">
+                            <div class="form-row">
+                                <div class="form-group col-half">
+                                    <label for="twilio_account_sid">Twilio Account SID</label>
+                                    <input type="text" id="twilio_account_sid" class="form-control" value="{{ config.twilio.account_sid }}">
+                                </div>
+                                <div class="form-group col-half">
+                                    <label for="twilio_auth_token">Twilio Auth Token</label>
+                                    <input type="password" id="twilio_auth_token" class="form-control" value="{{ config.twilio.auth_token }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-half">
+                                    <label for="twilio_from_number">Twilio From WhatsApp Number</label>
+                                    <input type="text" id="twilio_from_number" class="form-control" value="{{ config.twilio.from_number }}" placeholder="whatsapp:+14155238886">
+                                </div>
+                                <div class="form-group col-half">
+                                    <label for="twilio_to_number">Your WhatsApp Number (To)</label>
+                                    <input type="text" id="twilio_to_number" class="form-control" value="{{ config.twilio.to_number }}" placeholder="whatsapp:+919876543210">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Meta Section -->
+                        <div id="meta-config" class="provider-section hidden">
+                            <div class="form-group">
+                                <label for="meta_phone_number_id">Meta Phone Number ID</label>
+                                <input type="text" id="meta_phone_number_id" class="form-control" value="{{ config.meta.phone_number_id }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="meta_access_token">System User Access Token</label>
+                                <input type="password" id="meta_access_token" class="form-control" value="{{ config.meta.access_token }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="meta_recipient_phone">Recipient Phone (with country code, no +)</label>
+                                <input type="text" id="meta_recipient_phone" class="form-control" value="{{ config.meta.recipient_phone }}" placeholder="919876543210">
+                            </div>
+                        </div>
+
+                        <!-- General Automation Settings -->
+                        <div class="settings-divider"></div>
+                        <h3>Automation & Exam Preferences</h3>
+
+                        <div class="form-row">
+                            <div class="form-group col-half">
+                                <label for="polling_interval_minutes">Check Frequency (Minutes)</label>
+                                <input type="number" id="polling_interval_minutes" name="polling_interval_minutes" 
+                                       class="form-control" min="5" max="360" value="{{ config.polling_interval_minutes }}">
+                                <span class="form-hint">Recommended: 30 minutes (scans for new exam circulars automatically)</span>
+                            </div>
+                            <div class="form-group col-half">
+                                <label for="max_alerts_per_run">Max WhatsApp Alerts Per Batch</label>
+                                <input type="number" id="max_alerts_per_run" name="max_alerts_per_run" 
+                                       class="form-control" min="1" max="15" value="{{ config.max_alerts_per_run }}">
+                                <span class="form-hint">Prevents spamming WhatsApp when many notices are released at once</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Monitored Entrance Exams</label>
+                            <div class="checkbox-grid">
+                                {% for exam in ["NTA", "JEE", "NEET", "VITEEE", "CUET", "BITSAT"] %}
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="monitored_exams" value="{{ exam }}" 
+                                               {{ 'checked' if exam in config.monitored_exams else '' }}>
+                                        <span>{{ exam }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="save-settings-btn">💾 Save Settings</button>
+                            <button type="button" class="btn btn-success" id="test-whatsapp-btn">
+                                <span>📱 Send Test Message to WhatsApp</span>
+                            </button>
+                        </div>
+                        <div id="settings-status-box" class="status-box hidden"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab 3: WhatsApp Setup Guide -->
+            <div class="tab-pane" id="instructions-tab">
+                <div class="guide-container">
+                    <div class="guide-header">
+                        <h2>🚀 1-Minute WhatsApp Setup (100% Free)</h2>
+                        <p>Receive official exam notices straight to your personal WhatsApp without needing expensive APIs or subscriptions.</p>
+                    </div>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-badge">Step 1</div>
+                            <h3>Add Bot on WhatsApp</h3>
+                            <p>Save the CallMeBot contact number on your phone:</p>
+                            <div class="code-box">
+                                <code>+34 644 44 49 48</code>
+                            </div>
+                            <p class="step-subtext">Or open WhatsApp and start a chat with <strong>+34 644 44 49 48</strong>.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-badge">Step 2</div>
+                            <h3>Send Activation Message</h3>
+                            <p>Send the following text message to that number in WhatsApp:</p>
+                            <div class="code-box">
+                                <code>I allow callmebot to send me messages</code>
+                            </div>
+                            <p class="step-subtext">The bot will reply within seconds with your personal <strong>API Key</strong>.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-badge">Step 3</div>
+                            <h3>Enter Credentials & Test</h3>
+                            <p>Copy your API Key and go to <strong>WhatsApp Bot Settings</strong> tab:</p>
+                            <ul class="step-list">
+                                <li>Enter your WhatsApp phone number (e.g. <code>+919876543210</code>)</li>
+                                <li>Paste your API Key</li>
+                                <li>Click <strong>Save Settings</strong></li>
+                                <li>Click <strong>Send Test Message to WhatsApp</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="guide-features-box">
+                        <h3>✨ What updates will you receive on WhatsApp?</h3>
+                        <div class="feature-tags">
+                            <span class="ftag">🚨 NTA Public Circulars & Clarifications</span>
+                            <span class="ftag">📐 JEE Main & Advanced Dates, Admit Cards, Results</span>
+                            <span class="ftag">🩺 NEET UG Application, Admit Card, Counselling & Seat Matrix</span>
+                            <span class="ftag">🏛️ VITEEE 2027 Registration, Slot Booking & Exam Alerts</span>
+                            <span class="ftag">🎓 CUET & BITSAT Entrance Updates</span>
+                            <span class="ftag">🛡️ Anti-Duplicate Filter (Never get duplicate alerts)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>EduAlert System • Dedicated to Entrance Exam Aspirants • Live Sources: NTA (nta.ac.in), VIT (viteee.vit.ac.in), Google News</p>
+        </footer>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

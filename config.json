@@ -1,0 +1,69 @@
+{
+  "whatsapp_provider": "telegram",
+  "telegram": {
+    "bot_token": "",
+    "chat_id": ""
+  },
+  "gemini": {
+    "api_key": ""
+  },
+  "callmebot": {
+    "phone": "",
+    "apikey": ""
+  },
+  "twilio": {
+    "account_sid": "",
+    "auth_token": "",
+    "from_number": "whatsapp:+14155238886",
+    "to_number": ""
+  },
+  "meta": {
+    "phone_number_id": "",
+    "access_token": "",
+    "recipient_phone": ""
+  },
+  "monitored_exams": [
+    "NTA",
+    "NTA_TWITTER",
+    "JEE",
+    "JEE_ADV",
+    "NEET",
+    "VITEEE",
+    "CUET",
+    "ACPC",
+    "GUJCET",
+    "GSEB",
+    "NIRMA",
+    "DAIICT",
+    "PDPU",
+    "ADANI",
+    "MHT_CET",
+    "COMEDK",
+    "MET",
+    "WBJEE",
+    "GSAUCA"
+  ],
+  "custom_keywords": [
+    "Admit Card",
+    "Exam Date",
+    "Answer Key",
+    "Result",
+    "Application",
+    "Registration",
+    "Counselling",
+    "Merit List",
+    "Cutoff",
+    "Allotment",
+    "B.Tech",
+    "Admission"
+  ],
+  "polling_interval_minutes": 30,
+  "enabled_sources": {
+    "google_news": true,
+    "nta_official": true,
+    "viteee_official": true,
+    "portals": true
+  },
+  "max_alerts_per_run": 5,
+  "dry_run": false
+}

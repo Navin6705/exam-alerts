@@ -1,0 +1,12 @@
+services:
+  edualert:
+    build: .
+    container_name: edualert-bot
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./config.json:/app/config.json
+    environment:
+      - PYTHONUNBUFFERED=1
