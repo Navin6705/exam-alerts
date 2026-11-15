@@ -1,14 +1,22 @@
 import re
 from typing import Dict, Any, Optional
 import requests
-import pymupdf
 import urllib3
+try:
+    import pymupdf
+except ImportError:
+    try:
+        import fitz as pymupdf
+    except ImportError:
+        pymupdf = None
 
 urllib3.disable_warnings()
 
 
 def extract_pdf_content(pdf_url: str) -> Optional[str]:
     """Download PDF and extract text using PyMuPDF."""
+    if pymupdf is None:
+        return None
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"

@@ -28,6 +28,9 @@ Students and parents do not have time to read 10-page bureaucratic circulars or 
 ---
 
 ## 3. Chronological Changelog
+- **v1.9.0 (2026-11-15)**:
+  - Added `pymupdf`, `python-dotenv`, and `urllib3` to `requirements.txt` to eliminate cloud runner `ModuleNotFoundError`.
+  - Added resilient fallback import for `pymupdf` in `src/ai/pdf_analyzer.py` guaranteeing zero-crash operation on any OS.
 - **v1.8.0 (2026-11-15)**:
   - Upgraded Google News web article summarizer to generate full structured Real Insights (Key Insights & Decisions, Critical Deadlines, Advisories) matching official circular quality.
   - Successfully scraped and dispatched real-time Google News test bulletins for JEE Main, NEET UG, and JEE Advanced to Telegram with Status 200.
