@@ -63,6 +63,76 @@ MONITORED_PORTALS = [
         "url": "https://wbjeeb.nic.in/",
         "base_url": "https://wbjeeb.nic.in",
         "keywords": ["wbjee", "information bulletin", "registration", "admit card", "result", "counselling"]
+    },
+    {
+        "name": "JAC Delhi Admissions",
+        "category": "JAC",
+        "url": "https://jacdelhi.admissions.nic.in/",
+        "base_url": "https://jacdelhi.admissions.nic.in",
+        "keywords": ["b.tech", "counselling", "seat allotment", "merit", "schedule", "registration", "round", "dtu", "nsut", "iiitd"]
+    },
+    {
+        "name": "IIIT Bangalore B.Tech",
+        "category": "IIIT_BANGALORE",
+        "url": "https://www.iiitb.ac.in/",
+        "base_url": "https://www.iiitb.ac.in",
+        "keywords": ["b.tech", "admission", "application", "jee main", "merit list", "counselling", "round", "integrated m.tech"]
+    },
+    {
+        "name": "IIIT Hyderabad UG Admissions",
+        "category": "IIIT_HYDERABAD",
+        "url": "https://ugadmissions.iiit.ac.in/",
+        "base_url": "https://ugadmissions.iiit.ac.in",
+        "keywords": ["b.tech", "ugee", "jee", "admission", "application", "portal", "dates", "interview", "spec"]
+    },
+    {
+        "name": "CHARUSAT University Changa",
+        "category": "CHARUSAT",
+        "url": "https://charusat.ac.in/",
+        "base_url": "https://charusat.ac.in",
+        "keywords": ["b.tech", "admission", "gujcet", "engineering", "acpc", "cspit", "depstar", "application", "changa"]
+    },
+    {
+        "name": "JoSAA / CSAB Counselling",
+        "category": "JOSAA_CSAB",
+        "url": "https://josaa.nic.in/",
+        "base_url": "https://josaa.nic.in",
+        "keywords": ["counselling", "seat allotment", "opening", "closing", "rank", "schedule", "business rules", "round", "csab"]
+    },
+    {
+        "name": "BITS Pilani Admissions",
+        "category": "BITSAT",
+        "url": "https://www.bitsadmission.com/",
+        "base_url": "https://www.bitsadmission.com",
+        "keywords": ["bitsat", "admission", "b.e", "application", "iteration", "scorecard", "dates", "pilani"]
+    },
+    {
+        "name": "LNMIIT Jaipur Admissions",
+        "category": "LNMIIT",
+        "url": "https://lnmiit.ac.in/",
+        "base_url": "https://lnmiit.ac.in",
+        "keywords": ["b.tech", "admission", "application", "merit", "round", "counselling", "jee main", "lnmiit"]
+    },
+    {
+        "name": "Thapar Institute Patiala",
+        "category": "THAPAR",
+        "url": "https://www.thapar.edu/",
+        "base_url": "https://www.thapar.edu",
+        "keywords": ["b.tech", "admission", "application", "counselling", "merit", "cutoff", "jee", "tiet"]
+    },
+    {
+        "name": "DDU Nadiad B.Tech",
+        "category": "GUJARAT_TOP",
+        "url": "https://www.ddu.ac.in/",
+        "base_url": "https://www.ddu.ac.in",
+        "keywords": ["b.tech", "admission", "acpc", "engineering", "merit", "dharamsinh"]
+    },
+    {
+        "name": "LDCE Ahmedabad B.Tech",
+        "category": "GUJARAT_TOP",
+        "url": "http://ldce.ac.in/",
+        "base_url": "http://ldce.ac.in",
+        "keywords": ["b.tech", "admission", "acpc", "engineering", "merit", "counselling", "ldce"]
     }
 ]
 

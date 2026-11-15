@@ -41,6 +41,22 @@ def get_exam_emoji(category: str) -> str:
         return "🏛️"
     elif "NTA" in cat:
         return "🇮🇳"
+    elif "JAC" in cat:
+        return "🏛️"
+    elif "IIIT" in cat:
+        return "💻"
+    elif "CHARUSAT" in cat:
+        return "🎓"
+    elif "JOSAA" in cat or "CSAB" in cat:
+        return "🇮🇳"
+    elif "LNMIIT" in cat:
+        return "🏢"
+    elif "THAPAR" in cat:
+        return "🏆"
+    elif "BITS" in cat:
+        return "🌟"
+    elif "GUJARAT_TOP" in cat or "LDCE" in cat or "DDU" in cat:
+        return "🏫"
     elif "CUET" in cat:
         return "🎓"
     return "📚"

@@ -28,6 +28,10 @@ Students and parents do not have time to read 10-page bureaucratic circulars or 
 ---
 
 ## 3. Chronological Changelog
+- **v2.1.0 (2026-11-15)**:
+  - Added major requested B.Tech admission portals: **JAC Delhi** (DTU, NSUT, IIITD, IGDTUW), **IIIT Bangalore**, **IIIT Hyderabad** (UGEE/SPEC), and **CHARUSAT Changa** (CSPIT/DEPSTAR).
+  - Expanded national coverage with **JoSAA / CSAB** (IITs, NITs, IIITs, GFTIs), **BITS Pilani** (BITSAT), **LNMIIT Jaipur**, **Thapar Institute Patiala**, **SRMJEEE & AEEE**, and Top Gujarat State Engineering Colleges (**DDU Nadiad, LDCE Ahmedabad**).
+  - Total monitored categories expanded from 19 to **28 premier institutions and portals**.
 - **v2.0.0 (2026-11-15)**:
   - **Full 24/7 Cloud Autopilot Verified**: GitHub Actions cloud runner (#2) successfully ran all 19 scrapers in 1m 6s.
   - Successfully communicated with Telegram Bot API and committed updated SQLite database state back to GitHub (`EduAlert-Bot`).

@@ -31,7 +31,18 @@ EXAM_QUERIES = {
     "COMEDK": "COMEDK UGET engineering application admit card dates when:3d",
     "MET": "MET Manipal Entrance Test BTech application dates when:3d",
     "WBJEE": "WBJEE engineering entrance exam admit card result when:3d",
-    "BITSAT": "BITSAT Birla Institute entrance exam dates OR registration when:3d"
+    "BITSAT": "BITSAT Birla Institute entrance exam dates OR registration when:3d",
+
+    # 5. Premier National Engineering Entrances & Counselling
+    "JAC": "JAC Delhi BTech counselling registration OR seat allotment OR JAC Chandigarh when:3d",
+    "JOSAA_CSAB": "JoSAA counselling seat allotment OR CSAB round IIT NIT BTech when:3d",
+    "IIIT_BANGALORE": "IIIT Bangalore BTech admission OR cutoff OR merit list when:3d",
+    "IIIT_HYDERABAD": "IIIT Hyderabad BTech admission OR UGEE exam OR cutoff when:3d",
+    "CHARUSAT": "CHARUSAT University Changa admission OR CSPIT BTech ACPC when:3d",
+    "LNMIIT": "LNMIIT Jaipur admission BTech OR cutoff application when:3d",
+    "THAPAR": "Thapar University BTech admission counselling dates when:3d",
+    "SRM_AEEE": "SRMJEEE OR AEEE Amrita BTech entrance exam dates when:3d",
+    "GUJARAT_TOP": "LD College of Engineering LDCE OR DDU Nadiad BTech admission when:3d"
 }
 
 

@@ -52,7 +52,16 @@ DEFAULT_CONFIG: Dict[str, Any] = {
         "COMEDK",
         "MET",
         "WBJEE",
-        "GSAUCA"
+        "GSAUCA",
+        "JAC",
+        "JOSAA_CSAB",
+        "IIIT_BANGALORE",
+        "IIIT_HYDERABAD",
+        "CHARUSAT",
+        "LNMIIT",
+        "THAPAR",
+        "SRM_AEEE",
+        "GUJARAT_TOP"
     ],
     "custom_keywords": [
         "Admit Card",
