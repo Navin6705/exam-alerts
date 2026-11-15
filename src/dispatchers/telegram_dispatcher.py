@@ -8,11 +8,7 @@ MAX_TELEGRAM_MSG_LEN = 3900
 class TelegramDispatcher(BaseWhatsAppDispatcher):
     """
     Official Telegram Bot Dispatcher.
-    Uses official Telegram Bot API (Zero risk of personal account logout).
-    Supports:
-    - Text messages with Markdown / HTML (with automatic chunking if >4000 chars)
-    - Sending documents / PDFs directly with captions
-    - Action buttons
+    Uses official Telegram Bot API with HTML parse_mode for 100% reliable bolding and formatting.
     """
 
     def __init__(self, bot_token: str, chat_id: str):
@@ -20,13 +16,13 @@ class TelegramDispatcher(BaseWhatsAppDispatcher):
         self.chat_id = str(chat_id).strip()
         self.base_url = f"https://api.telegram.org/bot{self.bot_token}"
 
-    def send_message(self, message: str, parse_mode: str = "Markdown") -> Tuple[bool, str]:
+    def send_message(self, message: str, parse_mode: str = "HTML") -> Tuple[bool, str]:
         if not self.bot_token:
             return False, "Telegram Bot Token is missing."
         if not self.chat_id:
             return False, "Telegram Chat ID is missing. Please start the bot in Telegram first."
 
-        # If message is longer than Telegram limit (4096), split cleanly on newlines
+        # If message is longer than Telegram limit, split cleanly on newlines
         if len(message) > MAX_TELEGRAM_MSG_LEN:
             chunks = self._split_message(message, MAX_TELEGRAM_MSG_LEN)
             overall_success = True
@@ -40,7 +36,7 @@ class TelegramDispatcher(BaseWhatsAppDispatcher):
 
         return self._send_single_chunk(message, parse_mode)
 
-    def _send_single_chunk(self, text: str, parse_mode: str = "Markdown") -> Tuple[bool, str]:
+    def _send_single_chunk(self, text: str, parse_mode: str = "HTML") -> Tuple[bool, str]:
         url = f"{self.base_url}/sendMessage"
         payload = {
             "chat_id": self.chat_id,
@@ -55,13 +51,15 @@ class TelegramDispatcher(BaseWhatsAppDispatcher):
             if data.get("ok"):
                 return True, f"Telegram message sent to chat {self.chat_id}"
             else:
-                # If markdown fails due to special chars, retry in plain text
-                if parse_mode == "Markdown":
-                    payload.pop("parse_mode", None)
-                    retry_resp = requests.post(url, json=payload, timeout=15)
+                # If HTML tags failed, retry in plain text without markup
+                if parse_mode:
+                    # Strip basic HTML tags for fallback
+                    import re
+                    plain = re.sub(r"<[^>]+>", "", text)
+                    retry_resp = requests.post(url, json={"chat_id": self.chat_id, "text": plain}, timeout=15)
                     retry_data = retry_resp.json()
                     if retry_data.get("ok"):
-                        return True, f"Telegram message sent (plain text) to {self.chat_id}"
+                        return True, f"Telegram message sent (plain fallback) to {self.chat_id}"
                 return False, f"Telegram API Error: {data.get('description', resp.text)}"
         except Exception as e:
             return False, f"Telegram connection error: {e}"
@@ -80,7 +78,6 @@ class TelegramDispatcher(BaseWhatsAppDispatcher):
                     current = [line]
                     current_len = line_len
                 else:
-                    # Single line longer than max_len
                     chunks.append(line[:max_len])
                     current = [line[max_len:]]
                     current_len = len(current[0])
@@ -101,7 +98,8 @@ class TelegramDispatcher(BaseWhatsAppDispatcher):
         payload = {
             "chat_id": self.chat_id,
             "document": document_url,
-            "caption": caption[:1024]
+            "caption": caption[:1024],
+            "parse_mode": "HTML"
         }
 
         try:
@@ -115,7 +113,7 @@ class TelegramDispatcher(BaseWhatsAppDispatcher):
             return False, f"Telegram sendDocument Exception: {e}"
 
     def test_connection(self) -> Tuple[bool, str]:
-        test_msg = "🎓 *Mera Exam Bot Connected Successfully!*\n\nAapko NTA, JEE Main/Adv, NEET, aur VITEEE ke official circulars aur AI summaries yahan receive honge! 🚀"
+        test_msg = "🎓 <b>Mera Exam Bot Connected Successfully!</b>\n\nAapko NTA, JEE, NEET, aur Gujarat B.Tech ke official circulars aur AI summaries yahan receive honge! 🚀"
         return self.send_message(test_msg)
 
     def get_latest_chat_id(self) -> Optional[str]:

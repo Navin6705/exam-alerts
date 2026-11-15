@@ -1,3 +1,4 @@
+import html
 import os
 import re
 from typing import Any, Dict, Optional
@@ -6,49 +7,49 @@ from .pdf_analyzer import extract_pdf_content, extract_deep_notice_summary
 
 
 def format_executive_insight(article: Dict[str, Any], parsed: Dict[str, Any]) -> str:
-    """Format clean, zero-fluff Real Insight in professional English for busy students."""
-    exam = article.get("exam_category", "ADMISSION").upper()
+    """Format clean, zero-fluff Real Insight in professional HTML bolding for Telegram."""
+    exam = html.escape(article.get("exam_category", "ADMISSION").upper())
     url = article.get("url", "")
-    source = article.get("source", "Official Notice")
+    source = html.escape(article.get("source", "Official Notice"))
+    subject = html.escape(parsed.get('subject', article.get('title', '')))
 
     lines = [
-        f"🎓 *[{exam} • OFFICIAL CIRCULAR INSIGHT]* 🚨",
+        f"🎓 <b>[{exam} • OFFICIAL CIRCULAR INSIGHT]</b> 🚨",
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        f"📌 *Topic*: {parsed.get('subject', article.get('title'))}"
+        f"📌 <b>Topic</b>: {subject}"
     ]
 
     if parsed.get("notice_date"):
-        lines.append(f"📅 *Official Date*: {parsed['notice_date']}")
+        lines.append(f"📅 <b>Official Date</b>: {html.escape(parsed['notice_date'])}")
 
     # Key Insights & Decisions
     points = parsed.get("core_points", [])
     if points:
-        lines.append("\n⚡ *KEY INSIGHTS & DECISIONS*:")
+        lines.append("\n⚡ <b>KEY INSIGHTS & DECISIONS</b>:")
         for pt in points[:3]:
-            # Clean up into readable bullet
             clean_pt = re.sub(r"^(valid application|fresh application|last date|fee|one attempt per session):\s*", "", pt, flags=re.IGNORECASE)
-            lines.append(f"• {clean_pt}")
+            lines.append(f"• {html.escape(clean_pt)}")
 
     # Deadlines & Important Dates
     dates = parsed.get("key_dates", [])
     if dates:
-        lines.append("\n⏰ *CRITICAL DEADLINES & DATES*:")
+        lines.append("\n⏰ <b>CRITICAL DEADLINES & DATES</b>:")
         for d in dates[:3]:
-            lines.append(f"• {d}")
+            lines.append(f"• {html.escape(d)}")
 
     # Important Advisory / Candidate Rules
     if len(points) > 3:
         clean_warning = re.sub(r"^(one attempt per session|fee|warning):\s*", "", points[3], flags=re.IGNORECASE)
-        lines.append(f"\n⚠️ *IMPORTANT ADVISORY & RULES*:\n• {clean_warning}")
+        lines.append(f"\n⚠️ <b>IMPORTANT ADVISORY & RULES</b>:\n• {html.escape(clean_warning)}")
 
     if parsed.get("helpline"):
-        lines.append(f"\n📞 *Official Helpline*: {parsed['helpline']}")
+        lines.append(f"\n📞 <b>Official Helpline</b>: {html.escape(parsed['helpline'])}")
 
     lines.extend([
         "",
-        f"🔗 *Direct Official Link*:\n{url}",
+        f"🔗 <b>Direct Official Link</b>:\n{url}",
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        "🤖 _Mera Exam Bot • 30-Min Realtime Insight Scanner_"
+        "🤖 <i>Mera Exam Bot • 30-Min Realtime Insight Scanner</i>"
     ])
 
     return "\n".join(lines)
@@ -57,13 +58,13 @@ def format_executive_insight(article: Dict[str, Any], parsed: Dict[str, Any]) ->
 def generate_ai_exam_summary(article: Dict[str, Any], api_key: Optional[str] = None) -> str:
     """
     Generate deep, comprehensive exam notice analysis.
-    Reads PDF/article content thoroughly and extracts the exact executive insight in English.
+    Reads PDF/article content thoroughly and extracts the exact executive insight in HTML.
     """
     title = article.get("title", "")
     url = article.get("url", "")
-    exam = article.get("exam_category", "EXAM").upper()
-    source = article.get("source", "Official Notification")
-    pub_date = article.get("published_date", "")
+    exam = html.escape(article.get("exam_category", "EXAM").upper())
+    source = html.escape(article.get("source", "Official Notification"))
+    pub_date = html.escape(article.get("published_date", ""))
 
     # 1. Download and extract full PDF content if URL points to a PDF
     pdf_text = None
@@ -76,18 +77,18 @@ def generate_ai_exam_summary(article: Dict[str, Any], api_key: Optional[str] = N
         return format_executive_insight(article, parsed)
 
     # 3. For Web Articles / Non-PDF updates
-    clean_title = re.sub(r"^\[.*?\]\s*", "", title)
+    clean_title = html.escape(re.sub(r"^\[.*?\]\s*", "", title))
     
     return (
-        f"🎓 *[{exam} • OFFICIAL UPDATE & INSIGHT]* 📢\n"
+        f"🎓 <b>[{exam} • OFFICIAL UPDATE & INSIGHT]</b> 📢\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"📌 *Topic*: {clean_title}\n"
-        f"🏛️ *Source*: {source}\n"
-        f"📅 *Date*: {pub_date}\n\n"
-        f"⚡ *KEY INSIGHTS*:\n"
+        f"📌 <b>Topic</b>: {clean_title}\n"
+        f"🏛️ <b>Source</b>: {source}\n"
+        f"📅 <b>Date</b>: {pub_date}\n\n"
+        f"⚡ <b>KEY INSIGHTS</b>:\n"
         f"• Official notification released for {exam} candidates.\n"
         f"• Check the direct official link below for full application schedule and candidate instructions.\n\n"
-        f"🔗 *Direct Official Link*:\n{url}\n"
+        f"🔗 <b>Direct Official Link</b>:\n{url}\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"🤖 _Mera Exam Bot • 30-Min Realtime Insight Scanner_"
+        f"🤖 <i>Mera Exam Bot • 30-Min Realtime Insight Scanner</i>"
     )

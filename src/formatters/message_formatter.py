@@ -1,3 +1,4 @@
+import html
 from typing import Any, Dict, List
 
 
@@ -49,38 +50,38 @@ def get_priority_badge(priority: str) -> str:
     """Return badge based on priority."""
     p = priority.upper()
     if p == "HIGH":
-        return "🚨 *URGENT ALERT*"
+        return "🚨 <b>URGENT ALERT</b>"
     elif p == "MEDIUM":
-        return "📢 *IMPORTANT UPDATE*"
-    return "ℹ️ *ADMISSION NEWS*"
+        return "📢 <b>IMPORTANT UPDATE</b>"
+    return "ℹ️ <b>ADMISSION NEWS</b>"
 
 
 def format_single_article_message(article: Dict[str, Any]) -> str:
     """
-    Format a single article into a clean, rich message.
+    Format a single article into a clean, rich message in HTML format.
     """
-    category = article.get("exam_category", "EXAM").upper()
+    category = html.escape(article.get("exam_category", "EXAM").upper())
     emoji = get_exam_emoji(category)
     badge = get_priority_badge(article.get("priority", "MEDIUM"))
-    title = article.get("title", "No Title")
-    source = article.get("source", "Official Notification")
+    title = html.escape(article.get("title", "No Title"))
+    source = html.escape(article.get("source", "Official Notification"))
     url = article.get("url", "")
-    pub_date = article.get("published_date", "")
+    pub_date = html.escape(article.get("published_date", ""))
 
     msg_lines = [
-        f"{badge} {emoji} *[{category}]*",
+        f"{badge} {emoji} <b>[{category}]</b>",
         "━━━━━━━━━━━━━━━━━━━━",
-        f"📌 *Notice*: {title}",
-        f"🏛️ *Source*: {source}",
+        f"📌 <b>Notice</b>: {title}",
+        f"🏛️ <b>Source</b>: {source}",
     ]
     if pub_date:
-        msg_lines.append(f"📅 *Date*: {pub_date}")
+        msg_lines.append(f"📅 <b>Date</b>: {pub_date}")
 
     msg_lines.extend([
         "",
-        f"🔗 *Direct Link / Notice*:\n{url}",
+        f"🔗 <b>Direct Link / Notice</b>:\n{url}",
         "━━━━━━━━━━━━━━━━━━━━",
-        "🤖 _Mera Exam Bot • Realtime Admissions Alert_"
+        "🤖 <i>Mera Exam Bot • Realtime Admissions Alert</i>"
     ])
 
     return "\n".join(msg_lines)
@@ -88,29 +89,29 @@ def format_single_article_message(article: Dict[str, Any]) -> str:
 
 def format_digest_message(articles: List[Dict[str, Any]]) -> str:
     """
-    Format multiple articles into a clean consolidated digest.
+    Format multiple articles into a clean consolidated digest in HTML format.
     """
     if not articles:
-        return "ℹ️ *Mera Exam Bot*: No new exam notifications at this moment."
+        return "ℹ️ <b>Mera Exam Bot</b>: No new exam notifications at this moment."
 
     if len(articles) == 1:
         return format_single_article_message(articles[0])
 
     lines = [
-        f"🎓 *EDUALERT: {len(articles)} NEW ADMISSIONS NOTICES*",
+        f"🎓 <b>EDUALERT: {len(articles)} NEW ADMISSIONS NOTICES</b>",
         "━━━━━━━━━━━━━━━━━━━━"
     ]
 
     for idx, art in enumerate(articles, 1):
-        cat = art.get("exam_category", "EXAM").upper()
+        cat = html.escape(art.get("exam_category", "EXAM").upper())
         emoji = get_exam_emoji(cat)
-        title = art.get("title", "").strip()
+        title = html.escape(art.get("title", "").strip())
         url = art.get("url", "").strip()
 
-        lines.append(f"*{idx}.* {emoji} *[{cat}]* {title}")
+        lines.append(f"<b>{idx}.</b> {emoji} <b>[{cat}]</b> {title}")
         lines.append(f"   🔗 {url}\n")
 
     lines.append("━━━━━━━━━━━━━━━━━━━━")
-    lines.append("🤖 _Mera Exam Bot • 24/7 Live Monitoring_")
+    lines.append("🤖 <i>Mera Exam Bot • 24/7 Live Monitoring</i>")
 
     return "\n".join(lines)

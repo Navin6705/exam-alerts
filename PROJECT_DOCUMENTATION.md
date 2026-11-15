@@ -28,6 +28,9 @@ Students and parents do not have time to read 10-page bureaucratic circulars or 
 ---
 
 ## 3. Chronological Changelog
+- **v1.7.0 (2026-11-15)**:
+  - Upgraded Telegram message rendering engine from legacy Markdown to native HTML (`<b>`, `<i>`, `html.escape()`) ensuring 100% robust bold formatting across all mobile and desktop Telegram apps.
+  - Hardened GitHub Actions automated 30-minute cloud runner (`exam_monitor.yml`) to use GitHub Repository Secrets (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`) with explicit fallback to Telegram dispatcher.
 - **v1.6.0 (2026-11-15)**:
   - Converted all bulletin section headers into clean, professional English (`KEY INSIGHTS & DECISIONS`, `CRITICAL DEADLINES & DATES`, `IMPORTANT ADVISORY & RULES`).
   - Tested and delivered live sample bulletin to Telegram.
