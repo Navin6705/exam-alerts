@@ -56,5 +56,5 @@ jobs:
             echo "No database changes to commit."
           else
             git commit -m "Auto-update: Record latest exam notices [skip ci]"
-            git push
+            git push || echo "Notice: Grant Read & Write permissions in repo Settings -> Actions to persist database."
           fi
