@@ -28,6 +28,10 @@ Students and parents do not have time to read 10-page bureaucratic circulars or 
 ---
 
 ## 3. Chronological Changelog
+- **v2.0.0 (2026-11-15)**:
+  - **Full 24/7 Cloud Autopilot Verified**: GitHub Actions cloud runner (#2) successfully ran all 19 scrapers in 1m 6s.
+  - Successfully communicated with Telegram Bot API and committed updated SQLite database state back to GitHub (`EduAlert-Bot`).
+  - Zero-maintenance, serverless architecture fully operational on 30-minute cron schedule.
 - **v1.9.0 (2026-11-15)**:
   - Added `pymupdf`, `python-dotenv`, and `urllib3` to `requirements.txt` to eliminate cloud runner `ModuleNotFoundError`.
   - Added resilient fallback import for `pymupdf` in `src/ai/pdf_analyzer.py` guaranteeing zero-crash operation on any OS.
