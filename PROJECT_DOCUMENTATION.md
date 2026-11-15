@@ -28,6 +28,9 @@ Students and parents do not have time to read 10-page bureaucratic circulars or 
 ---
 
 ## 3. Chronological Changelog
+- **v1.8.0 (2026-11-15)**:
+  - Upgraded Google News web article summarizer to generate full structured Real Insights (Key Insights & Decisions, Critical Deadlines, Advisories) matching official circular quality.
+  - Successfully scraped and dispatched real-time Google News test bulletins for JEE Main, NEET UG, and JEE Advanced to Telegram with Status 200.
 - **v1.7.0 (2026-11-15)**:
   - Upgraded Telegram message rendering engine from legacy Markdown to native HTML (`<b>`, `<i>`, `html.escape()`) ensuring 100% robust bold formatting across all mobile and desktop Telegram apps.
   - Hardened GitHub Actions automated 30-minute cloud runner (`exam_monitor.yml`) to use GitHub Repository Secrets (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`) with explicit fallback to Telegram dispatcher.
